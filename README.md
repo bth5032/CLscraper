@@ -33,6 +33,8 @@ with
 ```python 
 urls = ['https://sandiego.craigslist.org/search/apa?query=pacific+beach&hasPic=1&max_price=3500&min_bedrooms=4&availabilityMode=0&sale_date=all+dates', 'https://sandiego.craigslist.org/search/apa?query=la+jolla&hasPic=1&max_price=3500&min_bedrooms=4&availabilityMode=0&sale_date=all+dates']
 ```
+**Note:** For searches with a lot of results, they will not all load on one page. To remedey this, make sure you have sorted the page by 'newest', which will be reflected in the URL as of May 2018 with the token `sort=date`. The default page count is 120, so as long as there are not 120 new posts within the time between searches, set by `SLEEPTIME`, you should still catch them all. But generally, this means it's better to use many specific searches than one broad search.
+
 
 You can use any number of searches for any number of different things. By default, the code is configured to use send email updates using a gmail account. If you have a gmail account, you can simply replace the lines
 

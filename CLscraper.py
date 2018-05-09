@@ -27,8 +27,10 @@ password='GMAIL_PASSWORD' #gmail password
 
 #List of search URLs, can do an arbitrarily large number of queries so long as they fit in a python list
 #Go to craigslist and do the search you want, then copy the URL string into the list, for instance
-#http://sandiego.craigslist.org/search/apa?query=pacific+beach&sale_date=-&maxAsk=3500&bedrooms=4&hasPic=1
+#https://sandiego.craigslist.org/search/apa?query=pacific+beach&sort=date&hasPic=1&max_price=3500&availabilityMode=0&sale_date=all+dates
 #would include a search for rentals in Pacific Beach with at least 4 bedrooms, posted with a picture, and charging under $3500 rent
+#make sure you sort the page by newest so that sort=date shows up in the URL. The default page count is 120, so as long as there are not
+#120 new posts within SLEEPTIME you should still catch them all. But generally, this means it's better to use many specific searches than one broad search.
 urls = ['SEARCH_URL_1_HERE','SEARCH_URL_2_HERE','SEARCH_URL_3_HERE','SEARCH_URL_4_HERE']
 ### ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ SET ALL OF THESE BEFORE YOU START IT!!! ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
