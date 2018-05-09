@@ -44,7 +44,7 @@ def constructMessage(msg, new_listings):
 	"""Constructs the message given the message head and the list of new postings"""
 	msg = "Subject: New Matches on Craigslist Search \n\n"+msg
 	for pid in new_listings.keys(): #construct the email message
-			msg = msg+"<a href=\""+new_listings[pid][0]+"\">"+new_listings[pid][1]+"</a>\n"
+			msg = msg+new_listings[pid][0]+" : "+new_listings[pid][1]+"\n"
 	return msg
 
 def getListOfIdsAndUrls():	
@@ -85,7 +85,7 @@ def doIteration(msg):
 	
 	if new_listings:
 		msg = constructMessage(msg, new_listings)
-		print "Found new listings, about to send email: \n%s" % msg
+		print "Found new listings, about to send email: \n\n%s" % msg
 
 		server = smtplib.SMTP('smtp.gmail.com:587')  
 		server.starttls()  
@@ -97,7 +97,7 @@ def doIteration(msg):
 
 # ---- Start Initialization Run to get all posts already on craigslist
 #Welcome message sent on first email
-msg = "Hi ...! I will do your craigslist search every %d minutes and notify you whenever a new house is posted that matches our search criteria. Here are all the intial positings that were up at the time your search was started... \n" % (SLEEPTIME / 60)
+msg = "Hi! \n I will do your craigslist search every %d minutes and notify you whenever a new listing is posted that matches our search criteria. Here are all the intial positings that were up at the time your search was started... \n\n" % (SLEEPTIME / 60)
 doIteration(msg)
 email = [] #re-initialize list of new posts and new post flag
 new = False	
