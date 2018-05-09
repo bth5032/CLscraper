@@ -18,12 +18,14 @@ import smtplib
 ### vvvvvvvvvvvvvvvvvvvvvvvvvvvv SET ALL OF THESE BEFORE YOU START IT!!! vvvvvvvvvvvvvvvvvvvvvvvvvvvv
 fromaddr = 'EMAIL@ADDR.COM' #Email address that the email is recieved from
 toaddrs = ['EMAIL1@ADDR.COM', 'EMAIL2@ADDR.COM', 'EMAIL3@ADDR.COM', 'EMAIL4@ADDR.COM'] #List of addresses to send the links to
+
 SLEEPTIME = 300 #number of seconds between searches
 CHECK_OLD_LISTINGS = True #If True, don't resend listings that have been reposted
 
 username='GMAIL_USER' #gmail username
 password='GMAIL_PASSWORD' #gmail password
-
+# Make sure you set up gmail to work with "less secure apps" here: https://myaccount.google.com/lesssecureapps?pli=1
+# You can also make a new gmail account to do this if your main one has two factor authentification or you want stronger security
 
 #List of search URLs, can do an arbitrarily large number of queries so long as they fit in a python list
 #Go to craigslist and do the search you want, then copy the URL string into the list, for instance
@@ -32,6 +34,7 @@ password='GMAIL_PASSWORD' #gmail password
 #make sure you sort the page by newest so that sort=date shows up in the URL. The default page count is 120, so as long as there are not
 #120 new posts within SLEEPTIME you should still catch them all. But generally, this means it's better to use many specific searches than one broad search.
 urls = ['SEARCH_URL_1_HERE','SEARCH_URL_2_HERE','SEARCH_URL_3_HERE','SEARCH_URL_4_HERE']
+
 ### ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ SET ALL OF THESE BEFORE YOU START IT!!! ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 old_listings = [] #Initialize list of old posting's unique craigslist ID
@@ -39,6 +42,7 @@ email = [] #Initialize list of posting's to be emailed after some run.
 
 def constructMessage(msg, new_listings):
 	"""Constructs the message given the message head and the list of new postings"""
+	msg = "Subject: New Matches on Craigslist Search \n\n"+msg
 	for pid in new_listings.keys(): #construct the email message
 			msg = msg+"<a href=\""+new_listings[pid][0]+"\">"+new_listings[pid][1]+"</a>\n"
 	return msg
@@ -83,17 +87,17 @@ def doIteration(msg):
 		msg = constructMessage(msg, new_listings)
 		print "Found new listings, about to send email: \n%s" % msg
 
-		#server = smtplib.SMTP('smtp.gmail.com:587')  
-		#server.starttls()  
-		#server.login(username,password)  
-		#server.sendmail(fromaddr, toaddrs, msg)  
-		#server.quit() 
+		server = smtplib.SMTP('smtp.gmail.com:587')  
+		server.starttls()  
+		server.login(username,password)  
+		server.sendmail(fromaddr, toaddrs, msg)  
+		server.quit() 
 	else:
 		print "No new listings found"
 
 # ---- Start Initialization Run to get all posts already on craigslist
 #Welcome message sent on first email
-msg = "Hi ...! I will do your craigslist search every X minutes and notify you whenever a new house is posted that matches our search criteria. Here are all the intial positings that were up at the time your search was started... \n"
+msg = "Hi ...! I will do your craigslist search every %d minutes and notify you whenever a new house is posted that matches our search criteria. Here are all the intial positings that were up at the time your search was started... \n" % (SLEEPTIME / 60)
 doIteration(msg)
 email = [] #re-initialize list of new posts and new post flag
 new = False	

@@ -7,6 +7,11 @@ The program uses the Beautiful Soup package, to install run
 ```bash
 sudo easy_install beautifulsoup4
 ```
+
+Additionally, this program uses gmail to send email messages. You must set up your gmail account to work with "less secure apps" [here](https://myaccount.google.com/lesssecureapps?pli=1)
+
+You can also make a new gmail account to do this if your main one has two factor authentification or you generally want stronger security.
+
 ## Usage
 To use the program, first go to craigslist and search for whatever you are looking for, then replace the tokens for URLs in CLscrapper.py with the URLs for the searches of insterest. 
 
