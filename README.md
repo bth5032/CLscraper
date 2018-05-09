@@ -13,13 +13,13 @@ To use the program, first go to craigslist and search for whatever you are looki
 For instance, if you want an apartment in Pacific Beach, San Diego with at least 4 bedrooms and costing less than 3500 per month, the craigslist search string will be
 
 ```
-https://sandiego.craigslist.org/search/apa?query=pacific+beach&hasPic=1&max_price=3500&min_bedrooms=4&availabilityMode=0&sale_date=all+dates
+https://sandiego.craigslist.org/search/apa?sort=date&availabilityMode=0&hasPic=1&max_price=3500&min_bedrooms=4&query=pacific%20beach
 ```
 
 The same search in La Jolla, CA would be 
 
 ```
-https://sandiego.craigslist.org/search/apa?query=la+jolla&hasPic=1&max_price=3500&min_bedrooms=4&availabilityMode=0&sale_date=all+dates
+https://sandiego.craigslist.org/search/apa?sort=date&availabilityMode=0&hasPic=1&max_price=3500&min_bedrooms=4&query=la%20jolla
 ```
 
 In this example, replace 
@@ -31,7 +31,7 @@ urls = ['SEARCH_URL_1_HERE','SEARCH_URL_2_HERE','SEARCH_URL_3_HERE','SEARCH_URL_
 with
 
 ```python 
-urls = ['https://sandiego.craigslist.org/search/apa?query=pacific+beach&hasPic=1&max_price=3500&min_bedrooms=4&availabilityMode=0&sale_date=all+dates', 'https://sandiego.craigslist.org/search/apa?query=la+jolla&hasPic=1&max_price=3500&min_bedrooms=4&availabilityMode=0&sale_date=all+dates']
+urls = ['https://sandiego.craigslist.org/search/apa?sort=date&availabilityMode=0&hasPic=1&max_price=3500&min_bedrooms=4&query=pacific%20beach', 'https://sandiego.craigslist.org/search/apa?sort=date&availabilityMode=0&hasPic=1&max_price=3500&min_bedrooms=4&query=la%20jolla']
 ```
 **Note:** For searches with a lot of results, they will not all load on one page. To remedey this, make sure you have sorted the page by 'newest', which will be reflected in the URL as of May 2018 with the token `sort=date`. The default page count is 120, so as long as there are not 120 new posts within the time between searches, set by `SLEEPTIME`, you should still catch them all. But generally, this means it's better to use many specific searches than one broad search.
 
