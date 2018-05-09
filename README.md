@@ -34,7 +34,7 @@ with
 urls = ['https://sandiego.craigslist.org/search/apa?query=pacific+beach&hasPic=1&max_price=3500&min_bedrooms=4&availabilityMode=0&sale_date=all+dates', 'https://sandiego.craigslist.org/search/apa?query=la+jolla&hasPic=1&max_price=3500&min_bedrooms=4&availabilityMode=0&sale_date=all+dates']
 ```
 
-By default, the code is configured to use send email updates using a gmail account. If you have a gmail account, you can simply replace the lines
+You can use any number of searches for any number of different things. By default, the code is configured to use send email updates using a gmail account. If you have a gmail account, you can simply replace the lines
 
 ```python
 username='GMAIL_USER' #gmail username
@@ -52,7 +52,7 @@ with your gmail address. Then update
 toaddrs = ['EMAIL1@ADDR.COM', 'EMAIL2@ADDR.COM', 'EMAIL3@ADDR.COM', 'EMAIL4@ADDR.COM']
 ```
 
-with a list of email addresses that should get the updates. It's totally fine to just email yourself, but this needs to stay a list.
+with a list of email addresses that should get the updates. You can make this list as long as you want. It's also fine to just email yourself, but this needs to stay a list.
 
 The last two configurables are `SLEEP_TIME` and `CHECK_OLD_LISTINGS`. `SLEEP_TIME` is the number of seconds between searches, and `CHECK_OLD_LISTINGS` attempts to not send reposted listings. 
 
