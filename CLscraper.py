@@ -54,7 +54,7 @@ def getListOfIdsAndUrls():
 
 			content = str(soup.find_all("div", class_="content")[0]) #Get the body of the search, strips away all the sidebars and stuff.
 
-			soup = BeautifulSoup(content[:content.find("<h4 class=\"ban nearby\">")],"html.parser") #Remove's the links from "nearby" towns that are far as fuck
+			soup = BeautifulSoup(content[:content.find("<h4 class=\"ban nearby\">")],"html.parser") #Remove's the links from "nearby" towns that are far away
 
 			for listing in soup.find_all("li", {"class": "result-row"}): #For each listing, find the listings by searching for results table elements. This tag also stores a unique ID for each listing
 				#grad the unique ID and URL for the listing, CHECK_OLD_LISTINGS is set, it also checks the repost of ID against the old_listings list.
