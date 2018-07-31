@@ -14,12 +14,13 @@ import datetime
 from bs4 import BeautifulSoup
 import time
 import smtplib
+import random
 
 ### vvvvvvvvvvvvvvvvvvvvvvvvvvvv SET ALL OF THESE BEFORE YOU START IT!!! vvvvvvvvvvvvvvvvvvvvvvvvvvvv
 fromaddr = 'EMAIL@ADDR.COM' #Email address that the email is recieved from
 toaddrs = ['EMAIL1@ADDR.COM', 'EMAIL2@ADDR.COM', 'EMAIL3@ADDR.COM', 'EMAIL4@ADDR.COM'] #List of addresses to send the links to
 
-SLEEPTIME = 300 #number of seconds between searches
+SLEEPTIME = random.randint(1800,5400) #number of seconds between searches, randomly between 30 and 90 mins to confuse CL.
 CHECK_OLD_LISTINGS = True #If True, don't resend listings that have been reposted
 
 username='GMAIL_USER' #gmail username
