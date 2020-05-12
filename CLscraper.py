@@ -81,6 +81,7 @@ def doIteration(msg):
 	if new_listings:
 		msg = constructMessage(msg, new_listings)
 		sys.stdout.buffer.write(("Found new listings, about to send email: \n\n%s" % msg).encode('utf-8'))
+		sys.stdout.buffer.flush()
 		server = smtplib.SMTP(smtp_server)  
 		server.starttls()  
 		if smtp_username: server.login(smtp_username,smtp_password)  
