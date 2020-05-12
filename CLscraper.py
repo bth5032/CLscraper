@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup
 import time
 import smtplib
 import json
+import sys
 try: from urllib.request import urlopen
 except ImportError: from urllib2 import urlopen
 import random
@@ -79,8 +80,7 @@ def doIteration(msg):
 	
 	if new_listings:
 		msg = constructMessage(msg, new_listings)
-		print("Found new listings, about to send email: \n\n%s" % msg)
-
+		sys.stdout.buffer.write(("Found new listings, about to send email: \n\n%s" % msg).encode('utf-8'))
 		server = smtplib.SMTP(smtp_server)  
 		server.starttls()  
 		if smtp_username: server.login(smtp_username,smtp_password)  
