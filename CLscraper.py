@@ -19,7 +19,7 @@ try: from urllib.request import urlopen
 except ImportError: from urllib2 import urlopen
 import random
 from configparser import ConfigParser
-SLEEPTIME = random.randint(60,300) # Number of seconds between searches, randomly between 1mn to 5mn
+SLEEPTIME = random.randint(60,600) # Number of seconds between searches, randomly between 1mn to 10mn
 CHECK_OLD_LISTINGS = True # If True, don't resend listings that have been reposted
 
 config=ConfigParser()
