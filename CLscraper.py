@@ -14,29 +14,23 @@ import datetime
 from bs4 import BeautifulSoup
 import time
 import smtplib
+import json
+import sys
+try: from urllib.request import urlopen
+except ImportError: from urllib2 import urlopen
 import random
+from configparser import ConfigParser
+SLEEPTIME = random.randint(60,600) # Number of seconds between searches, randomly between 1mn to 10mn
+CHECK_OLD_LISTINGS = True # If True, don't resend listings that have been reposted
 
-### vvvvvvvvvvvvvvvvvvvvvvvvvvvv SET ALL OF THESE BEFORE YOU START IT!!! vvvvvvvvvvvvvvvvvvvvvvvvvvvv
-fromaddr = 'EMAIL@ADDR.COM' #Email address that the email is recieved from
-toaddrs = ['EMAIL1@ADDR.COM', 'EMAIL2@ADDR.COM', 'EMAIL3@ADDR.COM', 'EMAIL4@ADDR.COM'] #List of addresses to send the links to
-
-SLEEPTIME = random.randint(1800,5400) #number of seconds between searches, randomly between 30 and 90 mins to confuse CL.
-CHECK_OLD_LISTINGS = True #If True, don't resend listings that have been reposted
-
-username='GMAIL_USER' #gmail username
-password='GMAIL_PASSWORD' #gmail password
-# Make sure you set up gmail to work with "less secure apps" here: https://myaccount.google.com/lesssecureapps?pli=1
-# You can also make a new gmail account to do this if your main one has two factor authentification or you want stronger security
-
-#List of search URLs, can do an arbitrarily large number of queries so long as they fit in a python list
-#Go to craigslist and do the search you want, then copy the URL string into the list, for instance
-#https://sandiego.craigslist.org/search/apa?query=pacific+beach&sort=date&hasPic=1&max_price=3500&availabilityMode=0&sale_date=all+dates
-#would include a search for rentals in Pacific Beach with at least 4 bedrooms, posted with a picture, and charging under $3500 rent
-#make sure you sort the page by newest so that sort=date shows up in the URL. The default page count is 120, so as long as there are not
-#120 new posts within SLEEPTIME you should still catch them all. But generally, this means it's better to use many specific searches than one broad search.
-urls = ['SEARCH_URL_1_HERE','SEARCH_URL_2_HERE','SEARCH_URL_3_HERE','SEARCH_URL_4_HERE']
-
-### ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ SET ALL OF THESE BEFORE YOU START IT!!! ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+config=ConfigParser()
+config.read('config.ini')
+smtp_server=config.get("CLscraper","smtp_server").strip()
+smtp_username=config.get("CLscraper","smtp_username").strip()
+smtp_password=config.get("CLscraper","smtp_password").strip()
+fromaddr=config.get("CLscraper","fromaddr").strip()
+toaddrs=json.loads(config.get("CLscraper","toaddrs"))
+urls=json.loads(config.get("CLscraper","urls"))
 
 old_listings = [] #Initialize list of old posting's unique craigslist ID
 email = [] #Initialize list of posting's to be emailed after some run.
@@ -53,7 +47,7 @@ def getListOfIdsAndUrls():
 	new_listings = {} #dictionary which holds the unique ID for each listing and the URL.
 
 	for craigslistLinkAddress in urls: 
-		f = urllib.urlopen(craigslistLinkAddress) #Open Web Address
+		f = urlopen(craigslistLinkAddress) #Open Web Address
 
 		soup = BeautifulSoup(f.read(),"html.parser") #read in html into BS4 data structure 
 
@@ -86,15 +80,15 @@ def doIteration(msg):
 	
 	if new_listings:
 		msg = constructMessage(msg, new_listings)
-		print "Found new listings, about to send email: \n\n%s" % msg
-
-		server = smtplib.SMTP('smtp.gmail.com:587')  
+		sys.stdout.buffer.write(("Found new listings, about to send email: \n\n%s" % msg).encode('utf-8'))
+		sys.stdout.buffer.flush()
+		server = smtplib.SMTP(smtp_server)  
 		server.starttls()  
-		server.login(username,password)  
-		server.sendmail(fromaddr, toaddrs, msg)  
+		if smtp_username: server.login(smtp_username,smtp_password)  
+		server.sendmail(fromaddr, toaddrs, msg.encode('utf-8'))  
 		server.quit() 
 	else:
-		print "No new listings found"
+		print("No new listings found")
 
 # ---- Start Initialization Run to get all posts already on craigslist
 #Welcome message sent on first email
@@ -109,7 +103,7 @@ time.sleep(SLEEPTIME) #wait for SLEEPTIME seconds before entering main loop
 # ---- Start Main Loop
 
 while True:
-	print "\n\n "+str(datetime.datetime.now())+":  --Checking again!-- \n\n" #Print timestamp to terminal so you know it's working
+	print("\n\n "+str(datetime.datetime.now())+":  --Checking again!-- \n\n") #Print timestamp to terminal so you know it's working
 	
 	msg = "There are new postings: \n\n" #construct new message header
 	doIteration(msg)
