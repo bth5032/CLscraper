@@ -20,7 +20,6 @@ try: from urllib.request import urlopen
 except ImportError: from urllib2 import urlopen
 import random
 from configparser import ConfigParser
-SLEEPTIME = random.randint(60,600) # Number of seconds between searches, randomly between 1mn to 10mn
 CHECK_OLD_LISTINGS = True # If True, don't resend listings that have been reposted
 
 config=ConfigParser()
@@ -29,8 +28,16 @@ smtp_server=config.get("CLscraper","smtp_server").strip()
 smtp_username=config.get("CLscraper","smtp_username").strip()
 smtp_password=config.get("CLscraper","smtp_password").strip()
 fromaddr=config.get("CLscraper","fromaddr").strip()
-toaddrs=json.loads(config.get("CLscraper","toaddrs"))
-urls=json.loads(config.get("CLscraper","urls"))
+toaddrs = json.loads(config.get("CLscraper","toaddrs"))
+urls = json.loads(config.get("CLscraper","urls"))
+sleepinterval = json.loads(config.get("CLscraper","sleeptime"))
+
+if sleepinterval[1] < sleepinterval[0]:
+	print("Sleep interval %s is not well formed, second number must be larger than the first. Exiting..." % str(sleepinterval))
+	exit(1)
+
+SLEEPTIME = random.randint(60*sleepinterval[0],60*sleepinterval[1]) # Number of seconds between searches, randomly between 1mn to 10mn
+
 
 old_listings = [] #Initialize list of old posting's unique craigslist ID
 email = [] #Initialize list of posting's to be emailed after some run.
@@ -92,7 +99,7 @@ def doIteration(msg):
 
 # ---- Start Initialization Run to get all posts already on craigslist
 #Welcome message sent on first email
-msg = "Hi! \n I will do your craigslist search every %d minutes and notify you whenever a new listing is posted that matches our search criteria. Here are all the intial positings that were up at the time your search was started... \n\n" % (SLEEPTIME / 60)
+msg = "Hi! \n I will do your craigslist search between every %f to %f minutes and notify you whenever a new listing is posted that matches our search criteria. Here are all the intial positings that were up at the time your search was started... \n\n" % (sleepinterval[0], sleepinterval[1])
 doIteration(msg)
 email = [] #re-initialize list of new posts and new post flag
 new = False	
@@ -111,4 +118,4 @@ while True:
 	email = []
 	new = False
 	time.sleep(SLEEPTIME)
-	SLEEPTIME = random.randint(1800,5400)
+	SLEEPTIME = random.randint(60*sleepinterval[0],60*sleepinterval[1])
