@@ -19,15 +19,15 @@ try: from urllib.request import urlopen
 except ImportError: from urllib2 import urlopen
 import random
 from configparser import ConfigParser
-SLEEPTIME = random.randint(1800,5400) # Number of seconds between searches, randomly between 30 and 90 mins to confuse CL.
+SLEEPTIME = random.randint(60,300) # Number of seconds between searches, randomly between 1mn to 5mn
 CHECK_OLD_LISTINGS = True # If True, don't resend listings that have been reposted
 
 config=ConfigParser()
 config.read('config.ini')
-smtp_server=config.get("CLscraper","smtp_server")
-smtp_username=config.get("CLscraper","smtp_username")
-smtp_password=config.get("CLscraper","smtp_password")
-fromaddr=config.get("CLscraper","fromaddr")
+smtp_server=config.get("CLscraper","smtp_server").strip()
+smtp_username=config.get("CLscraper","smtp_username").strip()
+smtp_password=config.get("CLscraper","smtp_password").strip()
+fromaddr=config.get("CLscraper","fromaddr").strip()
 toaddrs=json.loads(config.get("CLscraper","toaddrs"))
 urls=json.loads(config.get("CLscraper","urls"))
 
@@ -84,7 +84,7 @@ def doIteration(msg):
 		server = smtplib.SMTP(smtp_server)  
 		server.starttls()  
 		if smtp_username: server.login(smtp_username,smtp_password)  
-		server.sendmail(fromaddr, toaddrs, msg)  
+		server.sendmail(fromaddr, toaddrs, msg.encode('utf-8'))  
 		server.quit() 
 	else:
 		print("No new listings found")
